@@ -39,15 +39,15 @@ export type MutationUpdateWriterArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getAllWriters: Array<Maybe<Writer>>;
+  getAllWriters: Array<Writer>;
 };
 
 export type Writer = {
   __typename?: 'Writer';
-  about?: Maybe<Scalars['String']>;
+  about: Scalars['String'];
   id?: Maybe<Scalars['Int']>;
-  imgUrl?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  imgUrl: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type WriterCreateInput = {
@@ -72,10 +72,10 @@ export type GetAllWritersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllWritersQuery = (
   { __typename?: 'Query' }
-  & { getAllWriters: Array<Maybe<(
+  & { getAllWriters: Array<(
     { __typename?: 'Writer' }
     & Pick<Writer, 'id' | 'name' | 'about' | 'imgUrl'>
-  )>> }
+  )> }
 );
 
 

@@ -5,14 +5,14 @@ type Mutation {
 }
 
 type Query {
-  getAllWriters: [Writer]!
+  getAllWriters: [Writer!]!
 }
 
 type Writer {
-  about: String
+  about: String!
   id: Int
-  imgUrl: String
-  name: String
+  imgUrl: String!
+  name: String!
 }
 
 input WriterCreateInput {

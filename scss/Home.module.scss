@@ -1,4 +1,58 @@
 .container {
   padding: 24px;
   height: 100%;
+
+  .carouselItem {
+    display: flex;
+    justify-content: center;
+
+    .innerItem {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 400px;
+      max-height: 400px;
+      margin: 8px;
+      overflow: hidden;
+      cursor: pointer;
+
+      &:hover {
+        .transparentBox {
+          max-height: 250px;
+        }
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .transparentBox {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        max-height: 60px;
+        width: 100%;
+        padding: 16px;
+        background-color: #252525;
+        color: #fff;
+        opacity: 0.85;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .name {
+        margin: 0;
+        padding: 8px 0;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+
+      .about {
+        margin: 8px 0 0 0;
+      }
+    }
+  }
 }
