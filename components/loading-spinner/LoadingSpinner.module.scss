@@ -1,0 +1,10 @@
+.loadingWrapper {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-self: center;
+
+  .loadingText {
+    margin-top: 16px;
+  }
+}

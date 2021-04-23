@@ -1,7 +1,8 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import Carousel from 'react-material-ui-carousel'
-import { CircularProgress, Paper, useMediaQuery } from '@material-ui/core';
+import { Paper, useMediaQuery } from '@material-ui/core';
+import { LoadingSpinner } from '../components/loading-spinner/LoadingSpinner';
 import { GetAllWritersQuery, Writer } from '../generated/types';
 import { GetWriters } from '../gql-queries/GetWriters';
 import styles from '../scss/Home.module.scss';
@@ -13,7 +14,7 @@ const Home: React.FC = () => {
   if (loading) {
     return (
       <div className={styles.container}>
-        <CircularProgress />
+        <LoadingSpinner loadingText='Please Wait...' />
       </div>
     );
   }
