@@ -7,10 +7,14 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
-import { Writer, UpdateWriterMutation, DeleteWriterMutation } from '../../../../generated/types';
+import {
+  Writer, UpdateWriterMutation, DeleteWriterMutation, CreateWriterMutation
+} from '../../../../generated/types';
+import { CreateWriter } from '../../../../gql-queries/CreateWriter';
 import { UpdateWriter } from '../../../../gql-queries/UpdateWriter';
 import { DeleteWriter } from '../../../../gql-queries/DeleteWriter';
 import useDeleteWriterFromCache from '../../hooks/useDeleteWriterFromCache';
+import useInsertWriterInCache from '../../hooks/useInsertWriterInCache';
 import useSelectedWriter from '../../hooks/useSelectedWriter';
 import styles from './WriterDetails.module.scss';
 
@@ -29,7 +33,9 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
   const [writerData, setWwriterData] = useState<Writer>(writer || defaultWriter);
   const { setSelectedWriterIndex } = useSelectedWriter();
   const deleteFromCache = useDeleteWriterFromCache();
+  const insertInCache = useInsertWriterInCache();
 
+  const [createWriter, { loading: isCreating }] = useMutation<CreateWriterMutation>(CreateWriter);
   const [updateWriter, { loading: isUpdating }] = useMutation<UpdateWriterMutation>(UpdateWriter);
   const [deleteWriter, { loading: isDeleting }] = useMutation<DeleteWriterMutation>(DeleteWriter);
   const [successMessage, setSuccessMessage] = useState('');
@@ -40,6 +46,25 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
   }, [writer]);
 
   const onUpdateWriterCb = useCallback(() => {
+    if (!writerData.id) {
+      createWriter({
+        variables: {
+          input: {
+            name: writerData.name,
+            about: writerData.about,
+            imgUrl: writerData.imgUrl
+          }
+        }
+      }).then((response) => {
+        setSelectedWriterIndex(0);
+        insertInCache(response.data?.createWriter);
+        setSuccessMessage('Writer created successfully!');
+      }).catch(err => {
+        setErrorMessage(err.message);
+      });
+      return;
+    }
+
     updateWriter({
       variables: {
         input: {
@@ -74,7 +99,7 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
     });
   }, [writer]);
 
-  const isDisabled = isUpdating || isDeleting;
+  const isDisabled = isUpdating || isDeleting || isCreating;
 
   return (
     <Paper className={styles.writerDetails} elevation={2}>
@@ -116,7 +141,6 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             })}
             variant='outlined'
             label='Author Name'
-            InputLabelProps={{ shrink: Boolean(writer?.name) }}
             disabled={isDisabled}
             fullWidth
           />
@@ -131,7 +155,6 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             })}
             variant='outlined'
             label='Image URL'
-            InputLabelProps={{ shrink: Boolean(writer?.imgUrl) }}
             disabled={isDisabled}
             fullWidth
           />
@@ -146,7 +169,6 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             })}
             variant='outlined'
             label='About'
-            InputLabelProps={{ shrink: Boolean(writer?.about) }}
             rows={6}
             disabled={isDisabled}
             multiline

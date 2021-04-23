@@ -46,7 +46,7 @@ const Settings: React.FC = () => {
                   Slides
                 </span>
                 <Tooltip title='Add Slide'>
-                  <IconButton size='small'>
+                  <IconButton onClick={() => setSelectedWriterIndex(-1)} size='small'>
                     <AddCircleOutlineIcon />
                   </IconButton>
                 </Tooltip>

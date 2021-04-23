@@ -67,6 +67,19 @@ export type WriterUpdateInput = {
   name: Scalars['String'];
 };
 
+export type CreateWriterMutationVariables = Exact<{
+  input?: Maybe<WriterCreateInput>;
+}>;
+
+
+export type CreateWriterMutation = (
+  { __typename?: 'Mutation' }
+  & { createWriter?: Maybe<(
+    { __typename?: 'Writer' }
+    & Pick<Writer, 'id' | 'name' | 'about' | 'imgUrl'>
+  )> }
+);
+
 export type DeleteWriterMutationVariables = Exact<{
   input?: Maybe<WriterDeleteInput>;
 }>;
@@ -105,6 +118,42 @@ export type UpdateWriterMutation = (
 );
 
 
+export const CreateWriterDocument = gql`
+    mutation createWriter($input: WriterCreateInput) {
+  createWriter(input: $input) {
+    id
+    name
+    about
+    imgUrl
+  }
+}
+    `;
+export type CreateWriterMutationFn = Apollo.MutationFunction<CreateWriterMutation, CreateWriterMutationVariables>;
+
+/**
+ * __useCreateWriterMutation__
+ *
+ * To run a mutation, you first call `useCreateWriterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateWriterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createWriterMutation, { data, loading, error }] = useCreateWriterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateWriterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateWriterMutation, CreateWriterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateWriterMutation, CreateWriterMutationVariables>(CreateWriterDocument, options);
+      }
+export type CreateWriterMutationHookResult = ReturnType<typeof useCreateWriterMutation>;
+export type CreateWriterMutationResult = Apollo.MutationResult<CreateWriterMutation>;
+export type CreateWriterMutationOptions = Apollo.BaseMutationOptions<CreateWriterMutation, CreateWriterMutationVariables>;
 export const DeleteWriterDocument = gql`
     mutation deleteWriter($input: WriterDeleteInput) {
   deleteWriter(input: $input) {
