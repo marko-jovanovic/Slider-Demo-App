@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Grid, IconButton, Paper, TextField, Tooltip, Typography } from '@material-ui/core';
+import { useMutation } from '@apollo/client';
+import {
+  Button, CircularProgress, Grid, Typography,
+  IconButton, Paper, Snackbar, TextField, Tooltip
+} from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
-import { Writer } from '../../../../generated/types';
+import { Writer, UpdateWriterMutation } from '../../../../generated/types';
+import { UpdateWriter } from '../../../../gql-queries/UpdateWriter';
 import styles from './WriterDetails.module.scss';
 
 const defaultWriter = {
+  id: 0,
   name: '',
   about: '',
   imgUrl: ''
@@ -17,6 +24,10 @@ export interface WriterDetailsProps {
 
 export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
   const [writerData, setWwriterData] = useState(writer || defaultWriter);
+
+  const [updateWriter, { loading: isUpdating }] = useMutation<UpdateWriterMutation>(UpdateWriter);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   return (
     <Paper className={styles.writerDetails} elevation={2}>
@@ -63,7 +74,7 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             })}
             variant='outlined'
             label='Image URL'
-            InputLabelProps={{ shrink: Boolean(writer?.name) }}
+            InputLabelProps={{ shrink: Boolean(writer?.imgUrl) }}
             fullWidth
           />
         </Grid>
@@ -73,11 +84,11 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             value={writerData?.about}
             onChange={(e) => setWwriterData({
               ...writerData,
-              name: e.target.value
+              about: e.target.value
             })}
             variant='outlined'
-            label='Author Name'
-            InputLabelProps={{ shrink: Boolean(writer?.name) }}
+            label='About'
+            InputLabelProps={{ shrink: Boolean(writer?.about) }}
             rows={6}
             multiline
             fullWidth
@@ -89,11 +100,57 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             className={styles.saveBtn}
             variant='contained'
             color='primary'
+            onClick={() => {
+              updateWriter({
+                variables: {
+                  input: {
+                    id: writerData.id,
+                    name: writerData.name,
+                    about: writerData.about,
+                    imgUrl: writerData.imgUrl
+                  }
+                }
+              }).then(() => {
+                setShowSuccessMessage(true);
+              }).catch(err => {
+                setErrorMessage(err.message);
+              });
+            }}
+            disabled={isUpdating}
           >
-            Save
+            { isUpdating && (
+              <CircularProgress
+                className={styles.progressIndicator}
+                color='secondary'
+                size={20}
+              />
+            )}
+            <span>
+              { writer ? 'Update' : 'Save' }
+            </span>
           </Button>
         </Grid>
       </Grid>
+
+      <Snackbar
+        open={showSuccessMessage}
+        autoHideDuration={6000}
+        onClose={() => setShowSuccessMessage(false)}
+      >
+        <Alert elevation={0} variant='filled' severity='success'>
+          Successfully updated!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={Boolean(errorMessage)}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage('')}
+      >
+        <Alert elevation={0} variant='filled' severity='error'>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }

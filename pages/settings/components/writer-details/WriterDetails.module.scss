@@ -26,6 +26,10 @@
   
   .saveBtn {
     min-width: 100px;
+
+    .progressIndicator {
+      margin-right: 16px;
+    }
   }
 }
 
