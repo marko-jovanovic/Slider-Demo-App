@@ -1,0 +1,33 @@
+type Mutation {
+  createWriter(input: WriterCreateInput): Writer
+  deleteWriter(input: WriterDeleteInput): Writer
+  updateWriter(input: WriterUpdateInput): Writer
+}
+
+type Query {
+  getAllWriters: [Writer]!
+}
+
+type Writer {
+  about: String
+  id: Int
+  imgUrl: String
+  name: String
+}
+
+input WriterCreateInput {
+  about: String!
+  imgUrl: String!
+  name: String!
+}
+
+input WriterDeleteInput {
+  id: Int!
+}
+
+input WriterUpdateInput {
+  about: String!
+  id: Int!
+  imgUrl: String!
+  name: String!
+}

@@ -3,7 +3,7 @@ import { AppBar, Button, IconButton, Toolbar, Typography } from "@material-ui/co
 import CollectionsIcon from '@material-ui/icons/Collections';
 import styles from './Navbar.module.scss'
 
-export default function Navbar(props) {
+function Navbar() {
   return (
     <AppBar className={styles['app-navigation']} position="static">
       <Toolbar className='toolbar'>
@@ -29,3 +29,5 @@ export default function Navbar(props) {
     </AppBar>
   );
 }
+
+export default Navbar;

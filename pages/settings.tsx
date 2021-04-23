@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Settings() {
+const Settings: React.FC = () => {
   return <div>Settings</div>;
 }
 

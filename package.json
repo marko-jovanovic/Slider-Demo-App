@@ -6,14 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "docker:build": "docker build -t slider-demo-app ."
+    "docker:build": "docker build -t slider-demo-app .",
+    "generate": "graphql-codegen --config codegen.js -r dotenv/config",
+    "schema:fetch": "graphql-inspector introspect http://localhost:4000/graphql --write schema.graphql"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.15",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "graphql": "^15.5.0",
     "next": "10.1.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "sass": "^1.32.11"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.21.3",
+    "@graphql-codegen/introspection": "^1.18.2",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-operations": "^1.17.16",
+    "@graphql-codegen/typescript-react-apollo": "2.2.4",
+    "@graphql-inspector/cli": "^2.5.0",
+    "@graphql-inspector/introspect-command": "^2.4.0",
+    "@graphql-inspector/url-loader": "^2.4.0",
+    "@types/node": "^14.14.41",
+    "@types/react": "^17.0.3",
+    "typescript": "^4.2.4"
   }
 }
