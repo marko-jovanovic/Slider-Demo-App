@@ -1,14 +1,11 @@
-import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import { AppProps } from 'next/app'
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import { pink, teal } from "@material-ui/core/colors";
 import Navbar from "../components/navbar/Navbar";
+import apolloClient from '../apolloClient';
 import '../scss/globals.scss';
 
-const client = new ApolloClient({
-  link: new ApolloLink(),
-  cache: new InMemoryCache()
-});
 
 const theme = createMuiTheme({
   palette: {
@@ -23,7 +20,7 @@ const theme = createMuiTheme({
 
 function MyApp ({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <ThemeProvider theme={theme}>
         <Navbar />
 
