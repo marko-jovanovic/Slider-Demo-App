@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "docker:build": "docker build -t slider-demo-app ."
   },
   "dependencies": {
     "next": "10.1.3",
