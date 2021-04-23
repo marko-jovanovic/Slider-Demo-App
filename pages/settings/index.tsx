@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { Grid, List, ListItem, ListSubheader, Paper } from '@material-ui/core';
+import { Grid, IconButton, List, ListItem, ListSubheader, Paper, Tooltip } from '@material-ui/core';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { LoadingSpinner } from '../../components/loading-spinner/LoadingSpinner';
 import { GetAllWritersQuery } from '../../generated/types';
 import { GetWriters } from '../../gql-queries/GetWriters';
-import styles from './settings.module.scss';
 import { WriterDetails } from './components/writer-details/WriterDetails';
+import styles from './settings.module.scss';
 
 const Settings: React.FC = () => {
   const { data, loading } = useQuery<GetAllWritersQuery>(GetWriters);
@@ -20,17 +21,22 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <Grid spacing={2} direction='row' container>
+    <Grid className={styles.settingsPage} spacing={2} direction='row' container>
       <Grid item lg={2}>
         <Paper elevation={3}>
           <List
-            className={styles.questionList}
+            className={styles.writerList}
             component="nav"
             subheader={
-              <ListSubheader className={styles.questionListHead} component='div'>
+              <ListSubheader className={styles.writerListHead} component='div'>
                 <span>
                   Slides
                 </span>
+                <Tooltip title='Add Slide'>
+                  <IconButton size='small'>
+                    <AddCircleOutlineIcon />
+                  </IconButton>
+                </Tooltip>
               </ListSubheader>
           }>
             {

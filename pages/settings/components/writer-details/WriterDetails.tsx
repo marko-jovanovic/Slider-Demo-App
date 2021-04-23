@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, IconButton, Paper, TextField, Tooltip, Typography } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import OpenWithIcon from '@material-ui/icons/OpenWith';
 import { Writer } from '../../../../generated/types';
 import styles from './WriterDetails.module.scss';
 
@@ -22,6 +24,19 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
         <Typography variant='h6'>
           Slide Details
         </Typography>
+        <div className={styles.writerActions}>
+          <Tooltip title='Delete Writer'>
+            <IconButton className={styles.deleteBtn} size='small'>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title='Move Writer'>
+            <IconButton className={styles.moveBtn} size='small'>
+              <OpenWithIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
       </div>
 
       <Grid spacing={3} direction='column' container>

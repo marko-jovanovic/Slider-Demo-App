@@ -1,12 +1,27 @@
 .writerDetails {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 24px 32px;
 
   .head {
     border-bottom: 1px solid #616161;
     padding-bottom: 8px;
     margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+
+    .writerActions {
+      margin-left: auto;
+
+      .deleteBtn {
+        color: #F44336;
+        margin-right: 8px;
+      }
+
+      .moveBtn {
+        color: #009688;
+      }
+    }
   }
   
   .saveBtn {

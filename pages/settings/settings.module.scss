@@ -1,3 +1,13 @@
-.questionList {
-  padding: 0 !important;
+.settingsPage {
+  .writerList {
+    padding: 0 !important;
+  }
+  
+  .writerListHead {
+    display: flex;
+
+    button {
+      margin-left: auto;
+    }
+  }
 }
