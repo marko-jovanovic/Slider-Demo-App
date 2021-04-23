@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import {
   Button, CircularProgress, Grid, Typography,
@@ -7,8 +7,11 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
-import { Writer, UpdateWriterMutation } from '../../../../generated/types';
+import { Writer, UpdateWriterMutation, DeleteWriterMutation } from '../../../../generated/types';
 import { UpdateWriter } from '../../../../gql-queries/UpdateWriter';
+import { DeleteWriter } from '../../../../gql-queries/DeleteWriter';
+import useDeleteWriterFromCache from '../../hooks/useDeleteWriterFromCache';
+import useSelectedWriter from '../../hooks/useSelectedWriter';
 import styles from './WriterDetails.module.scss';
 
 const defaultWriter = {
@@ -23,11 +26,55 @@ export interface WriterDetailsProps {
 }
 
 export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
-  const [writerData, setWwriterData] = useState(writer || defaultWriter);
+  const [writerData, setWwriterData] = useState<Writer>(writer || defaultWriter);
+  const { setSelectedWriterIndex } = useSelectedWriter();
+  const deleteFromCache = useDeleteWriterFromCache();
 
   const [updateWriter, { loading: isUpdating }] = useMutation<UpdateWriterMutation>(UpdateWriter);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [deleteWriter, { loading: isDeleting }] = useMutation<DeleteWriterMutation>(DeleteWriter);
+  const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    setWwriterData(writer || defaultWriter);
+  }, [writer]);
+
+  const onUpdateWriterCb = useCallback(() => {
+    updateWriter({
+      variables: {
+        input: {
+          id: writerData.id,
+          name: writerData.name,
+          about: writerData.about,
+          imgUrl: writerData.imgUrl
+        }
+      }
+    }).then(() => {
+      setSuccessMessage('Writer updated successfully!');
+    }).catch(err => {
+      setErrorMessage(err.message);
+    });
+  }, [writerData]);
+
+  const onDeleteWriterCb = useCallback(() => {
+    if (!writer) return;
+
+    deleteWriter({
+      variables: {
+        input: {
+          id: writer.id
+        }
+      }
+    }).then(() => {
+      setSuccessMessage('Writer deleted successfully!');
+      deleteFromCache(writer.id);
+      setSelectedWriterIndex(prev => prev - 1);
+    }).catch(err => {
+      setErrorMessage(err.message);
+    });
+  }, [writer]);
+
+  const isDisabled = isUpdating || isDeleting;
 
   return (
     <Paper className={styles.writerDetails} elevation={2}>
@@ -37,13 +84,22 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
         </Typography>
         <div className={styles.writerActions}>
           <Tooltip title='Delete Writer'>
-            <IconButton className={styles.deleteBtn} size='small'>
+            <IconButton
+              className={styles.deleteBtn}
+              size='small'
+              onClick={onDeleteWriterCb}
+              disabled={isDisabled}
+            >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
 
           <Tooltip title='Move Writer'>
-            <IconButton className={styles.moveBtn} size='small'>
+            <IconButton
+              className={styles.moveBtn}
+              size='small'
+              disabled={isDisabled}
+            >
               <OpenWithIcon />
             </IconButton>
           </Tooltip>
@@ -61,6 +117,7 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             variant='outlined'
             label='Author Name'
             InputLabelProps={{ shrink: Boolean(writer?.name) }}
+            disabled={isDisabled}
             fullWidth
           />
         </Grid>
@@ -75,6 +132,7 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             variant='outlined'
             label='Image URL'
             InputLabelProps={{ shrink: Boolean(writer?.imgUrl) }}
+            disabled={isDisabled}
             fullWidth
           />
         </Grid>
@@ -90,6 +148,7 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             label='About'
             InputLabelProps={{ shrink: Boolean(writer?.about) }}
             rows={6}
+            disabled={isDisabled}
             multiline
             fullWidth
           />
@@ -100,23 +159,8 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
             className={styles.saveBtn}
             variant='contained'
             color='primary'
-            onClick={() => {
-              updateWriter({
-                variables: {
-                  input: {
-                    id: writerData.id,
-                    name: writerData.name,
-                    about: writerData.about,
-                    imgUrl: writerData.imgUrl
-                  }
-                }
-              }).then(() => {
-                setShowSuccessMessage(true);
-              }).catch(err => {
-                setErrorMessage(err.message);
-              });
-            }}
-            disabled={isUpdating}
+            onClick={onUpdateWriterCb}
+            disabled={isDisabled}
           >
             { isUpdating && (
               <CircularProgress
@@ -126,19 +170,19 @@ export const WriterDetails: React.FC<WriterDetailsProps> = ({ writer }) => {
               />
             )}
             <span>
-              { writer ? 'Update' : 'Save' }
+              { writerData.id ? 'Update' : 'Save' }
             </span>
           </Button>
         </Grid>
       </Grid>
 
       <Snackbar
-        open={showSuccessMessage}
+        open={Boolean(successMessage)}
         autoHideDuration={6000}
-        onClose={() => setShowSuccessMessage(false)}
+        onClose={() => setSuccessMessage('')}
       >
         <Alert elevation={0} variant='filled' severity='success'>
-          Successfully updated!
+          {successMessage}
         </Alert>
       </Snackbar>
 

@@ -10,7 +10,7 @@ type Query {
 
 type Writer {
   about: String!
-  id: Int
+  id: Int!
   imgUrl: String!
   name: String!
 }

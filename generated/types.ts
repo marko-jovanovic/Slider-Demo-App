@@ -45,7 +45,7 @@ export type Query = {
 export type Writer = {
   __typename?: 'Writer';
   about: Scalars['String'];
-  id?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
   imgUrl: Scalars['String'];
   name: Scalars['String'];
 };
@@ -66,6 +66,19 @@ export type WriterUpdateInput = {
   imgUrl: Scalars['String'];
   name: Scalars['String'];
 };
+
+export type DeleteWriterMutationVariables = Exact<{
+  input?: Maybe<WriterDeleteInput>;
+}>;
+
+
+export type DeleteWriterMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteWriter?: Maybe<(
+    { __typename?: 'Writer' }
+    & Pick<Writer, 'id' | 'name' | 'about' | 'imgUrl'>
+  )> }
+);
 
 export type GetAllWritersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -92,6 +105,42 @@ export type UpdateWriterMutation = (
 );
 
 
+export const DeleteWriterDocument = gql`
+    mutation deleteWriter($input: WriterDeleteInput) {
+  deleteWriter(input: $input) {
+    id
+    name
+    about
+    imgUrl
+  }
+}
+    `;
+export type DeleteWriterMutationFn = Apollo.MutationFunction<DeleteWriterMutation, DeleteWriterMutationVariables>;
+
+/**
+ * __useDeleteWriterMutation__
+ *
+ * To run a mutation, you first call `useDeleteWriterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWriterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWriterMutation, { data, loading, error }] = useDeleteWriterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteWriterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteWriterMutation, DeleteWriterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteWriterMutation, DeleteWriterMutationVariables>(DeleteWriterDocument, options);
+      }
+export type DeleteWriterMutationHookResult = ReturnType<typeof useDeleteWriterMutation>;
+export type DeleteWriterMutationResult = Apollo.MutationResult<DeleteWriterMutation>;
+export type DeleteWriterMutationOptions = Apollo.BaseMutationOptions<DeleteWriterMutation, DeleteWriterMutationVariables>;
 export const GetAllWritersDocument = gql`
     query getAllWriters {
   getAllWriters {
