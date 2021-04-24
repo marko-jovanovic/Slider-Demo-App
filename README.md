@@ -1,34 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Slider Demo App
 
-## Getting Started
+A GraphQL client written for [Slider Demo Server](https://github.com/marko-jovanovic/Slider-Demo-Server)
 
-First, run the development server:
+## Tech stach
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Dependencies:
+- [Apollo Client React](https://www.apollographql.com/docs/react/) - Open source GraphQL client
+- [Next](https://nextjs.org/) - Framework that enables the developer to write and render React on the server side, and then hydrate the UI once the page is loaded. Besides that, it can statically generate pages which is really user-friendly for SEO
+- [@graphql-codegen/cli](https://www.graphql-code-generator.com/) - Generate TypeScript classes and types from GraphQL schema and operations
+- [@graphql-inspector/cli](https://github.com/kamilkisiela/graphql-inspector#readme) - GraphQL Inspector tool that outputs a list of changes between two GraphQL schemas. Unfortunatelly we  don't use this feature as much fetching the schema and saving it locally
+- [@material-ui](https://material-ui.com/) - UI component library written in Material Design style
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Getting started
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Since this app is designed to be used along with [Slider Demo Server](https://github.com/marko-jovanovic/Slider-Demo-Server), please refer to that repository on how to boot up the server.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Step 1
+Create docker image by running: `yarn docker:build`
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Step 2
+Now that you have the image you can go to [Slider Demo Server](https://github.com/marko-jovanovic/Slider-Demo-Server) and continue from there if you want to boot up everything in the docker container (via `docker-compose`).
 
-## Learn More
+### Run at any time
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Note that you don't have to necessarily run the app in the container, you can run it on its own by running the command: `yarn dev`
