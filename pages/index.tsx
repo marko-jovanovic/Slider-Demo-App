@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import Carousel from 'react-material-ui-carousel'
-import { Paper, useMediaQuery } from '@material-ui/core';
+import { Paper, Typography, useMediaQuery } from '@material-ui/core';
 import { LoadingSpinner } from '../components/loading-spinner/LoadingSpinner';
 import { GetAllWritersQuery, Writer } from '../generated/types';
 import { GetWriters } from '../gql-queries/GetWriters';
@@ -33,29 +33,37 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Carousel autoPlay={false} animation='slide'>
-        {
-          carouselPages.map(page => (
-            <Paper className={styles.carouselItem}>
-              {
-                page.map(writer => (
-                  <div className={styles.innerItem}>
-                    <img src={writer.imgUrl} />
-                    <div className={styles.transparentBox}>
-                      <p className={styles.name}>
-                        {writer.name}
-                      </p>
-                      <p className={styles.about}>
-                        {writer.about}
-                      </p>
+      {!data?.getAllWriters.length && (
+        <Typography variant='h2'>
+          There is no added writter at the moment...
+        </Typography>
+      )}
+
+      {data && data.getAllWriters.length > 0 && (
+        <Carousel autoPlay={false} animation='slide'>
+          {
+            carouselPages.map(page => (
+              <Paper className={styles.carouselItem}>
+                {
+                  page.map(writer => (
+                    <div className={styles.innerItem}>
+                      <img src={writer.imgUrl} />
+                      <div className={styles.transparentBox}>
+                        <p className={styles.name}>
+                          {writer.name}
+                        </p>
+                        <p className={styles.about}>
+                          {writer.about}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))
-              }
-            </Paper>
-          ))
-        }
-      </Carousel>
+                  ))
+                }
+              </Paper>
+            ))
+          }
+        </Carousel>
+      )}
     </div>
   )
 }
